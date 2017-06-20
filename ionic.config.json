@@ -2,13 +2,20 @@
   "name": "myApp",
   "app_id": "1dfc9fa3",
   "type": "ionic1",
-  "typescript": false,
   "watch": {
-  "sass": ["scss/**/*.scss"],
-  "html": ["www/**/*.html"],
-  "livereload": [
-  "www/**/*.html",
-  "www/**/*.js",
-  "www/**/*.css"
+    "sass": [
+      "scss/**/*.scss"
+    ],
+    "html": [
+      "www/**/*.html"
+    ],
+    "livereload": [
+      "www/**/*.html",
+      "www/**/*.js",
+      "www/**/*.css"
+    ]
+  },
+  "watchPatterns": [
+    "scss/**/*"
   ]
 }
