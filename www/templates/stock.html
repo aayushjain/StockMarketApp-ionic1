@@ -4,15 +4,15 @@
 
   <div class="buttons" side="left">
     <div class="button button-clear">
-      <h6>Company Name Inc</h6>
+      <h6>{{stockDetailsData.Name}}</h6>
     </div>
   </div>
 
-  <h6 class="title button-left button-right">1000.5000</h6>
+  <h2 class="title button-left button-right">{{stockPriceData.l}}</h2>
 
   <div class="buttons" side="right">
     <div class="button button-clear">
-      <h6>+100.0000%</h6>
+      <h6>{{stockPriceData.cp}}%</h6>
     </div>
   </div>
 
@@ -20,11 +20,33 @@
 
   <ion-content class="has-subheader">
 
-    <div class="card">
+  <!--
+  https://www.google.com/finance/getchart?q=MSFT&p=1d&i=60
+  https://www.google.com/finance/getchart?q=MSFT&p=5d&i=240
+  https://www.google.com/finance/getchart?q=MSFT&p=3M&i=86400
+  https://www.google.com/finance/getchart?q=MSFT&p=1Y&i=86400
+  https://www.google.com/finance/getchart?q=MSFT&p=40Y&i=604800
+  -->
+
+        <div class="card">
       <div class="item item-divider">Market Data</div>
       <div class="row row-center">
-        <div class="col">Data:</div>
-        <div class="col">1000.500</div>
+        <div class="col">:</div>
+        <div class="col">{{}}</div>
+        <div class="col">:</div>
+        <div class="col">{{}}</div>
+      </div>
+      <div class="row row-center">
+        <div class="col">:</div>
+        <div class="col">{{}}</div>
+        <div class="col">:</div>
+        <div class="col">{{}}</div>
+      </div>
+      <div class="row row-center">
+        <div class="col">:</div>
+        <div class="col">{{}}</div>
+        <div class="col">:</div>
+        <div class="col">{{}}</div>
       </div>
     </div>
 

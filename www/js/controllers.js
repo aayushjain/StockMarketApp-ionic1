@@ -59,20 +59,31 @@ angular.module('myApp.controllers', [])
 }])
 
 .controller('StockCtrl', ['$scope', '$stateParams', 'stockDataService',
-  function($scope, $stateParams, stockDataService) {
+function($scope, $stateParams, stockDataService) {
 
-    $scope.ticker = $stateParams.StockTicker;
+  $scope.ticker = $stateParams.StockTicker;
 
-    $scope.$on("$ionicView.afterEnter", function() {
-      getPriceData();
+  $scope.$on("$ionicView.afterEnter", function() {
+    getPriceData();
+    getDetailsData();
+  });
+
+  function getPriceData() {
+    var promise = stockDataService.getPriceData($scope.ticker);
+
+    promise.then(function(data) {
+      console.log(data);
+      $scope.stockPriceData = data;
     });
+  }
 
-    function getPriceData() {
-      var promise = stockDataService.getPriceData($scope.ticker);
+  function getDetailsData() {
+    var promise = stockDataService.getDetailsData($scope.ticker);
 
-      promise.then(function(data) {
-        console.log(data);
-      });
-    }
+    promise.then(function(data) {
+      console.log(data);
+      $scope.stockDetailsData = data;
+    });
+  }
 
 }]);
