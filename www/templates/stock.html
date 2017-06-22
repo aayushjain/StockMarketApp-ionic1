@@ -1,22 +1,22 @@
 <ion-view view-title={{ticker}}>
 
-<div class="bar bar-subheader bar-light">
+  <div class="bar bar-subheader bar-light">
 
-  <div class="buttons" side="left">
-    <div class="button button-clear">
-      <h6>{{stockDetailsData.Name}}</h6>
+    <div class="buttons" side="left">
+      <div class="button button-clear">
+        <h6>{{stockDetailsData.Name}}</h6>
+      </div>
     </div>
-  </div>
+    
+    <h2 class="title button-left button-right">{{stockPriceData.l}}</h2>
 
-  <h2 class="title button-left button-right">{{stockPriceData.l}}</h2>
-
-  <div class="buttons" side="right">
-    <div class="button button-clear">
-      <h6>{{stockPriceData.cp}}%</h6>
+    <div class="buttons" side="right">
+      <div class="button button-clear">
+        <h6>{{stockPriceData.cp}}%</h6>
+      </div>
     </div>
-  </div>
 
-</div>
+  </div>
 
   <ion-content class="has-subheader">
 
@@ -34,15 +34,8 @@
     <img ng-if="chartView == 4" ng-src="https://www.google.com/finance/getchart?q={{ticker}}&p=1Y&i=86400" style="width: 100%">
     <img ng-if="chartView == 5" ng-src="https://www.google.com/finance/getchart?q={{ticker}}&p=40Y&i=604800" style="width: 100%">
 
-  <!--
-  https://www.google.com/finance/getchart?q=MSFT&p=1d&i=60
-  https://www.google.com/finance/getchart?q=MSFT&p=5d&i=240
-  https://www.google.com/finance/getchart?q=MSFT&p=3M&i=86400
-  https://www.google.com/finance/getchart?q=MSFT&p=1Y&i=86400
-  https://www.google.com/finance/getchart?q=MSFT&p=40Y&i=604800
-  -->
 
-        <div class="card">
+    <div class="card">
       <div class="item item-divider">Market Data</div>
       <div class="row row-center">
         <div class="col">Ask:</div>
@@ -88,20 +81,20 @@
       </div>
     </div>
 
-<div class="card">
-  <div class="item item-divider">Notes</div>
-  <a class="item">
-    <h2>Note Title</h2>
-  </a>
-</div>
+    <div class="card">
+      <div class="item item-divider">Notes</div>
+      <a class="item">
+        <h2>Note Title</h2>
+      </a>
+    </div>
 
-<div class="card">
-  <div class="item item-divider">News</div>
-  <a class="item item-icon-right">
-    <h2>News Story Title</h2>
-    <i class="icon ion-ios-arrow-right"></i>
-  </a>
-</div>
+    <div class="card">
+      <div class="item item-divider">News</div>
+      <a class="item item-icon-right">
+        <h2>News Story Title</h2>
+        <i class="icon ion-ios-arrow-right"></i>
+      </a>
+    </div>
 
   </ion-content>
 </ion-view>
