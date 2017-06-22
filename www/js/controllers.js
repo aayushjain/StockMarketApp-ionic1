@@ -62,11 +62,16 @@ angular.module('myApp.controllers', [])
 function($scope, $stateParams, stockDataService) {
 
   $scope.ticker = $stateParams.StockTicker;
+  $scope.chartView = 1;
 
   $scope.$on("$ionicView.afterEnter", function() {
     getPriceData();
     getDetailsData();
   });
+
+  $scope.chartViewFunc = function(n) {
+      $scope.chartView = n;
+  };
 
   function getPriceData() {
     var promise = stockDataService.getPriceData($scope.ticker);
