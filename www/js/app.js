@@ -1,5 +1,7 @@
 angular.module('myApp', [
   'ionic',
+  'nvd3',
+  'nvChart',
   'myApp.controllers',
   'myApp.services',
   'myApp.filters',

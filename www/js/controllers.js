@@ -58,18 +58,21 @@ angular.module('myApp.controllers', [])
     ];
 }])
 
-.controller('StockCtrl', ['$scope', '$stateParams', 'stockDataService', 'dateService',
-function($scope, $stateParams, stockDataService, dateService) {
+.controller('StockCtrl', ['$scope', '$stateParams', '$window', 'stockDataService', 'dateService', 'chartDataService',
+function($scope, $stateParams, $window, stockDataService, dateService, chartDataService) {
 
   $scope.ticker = $stateParams.StockTicker;
-  $scope.chartView = 1;
+  $scope.chartView = 4;
+  $scope.oneYearAgoDate = dateService.oneYearAgoDate();
+  $scope.todayDate = dateService.currentDate();
 
-  console.log(dateService.currentDate());
-  console.log(dateService.oneYearAgoDate());
+  //console.log(dateService.currentDate());
+  //console.log(dateService.oneYearAgoDate());
 
   $scope.$on("$ionicView.afterEnter", function() {
     getPriceData();
     getDetailsData();
+    getChartData();
   });
 
   $scope.chartViewFunc = function(n) {
@@ -80,7 +83,7 @@ function($scope, $stateParams, stockDataService, dateService) {
     var promise = stockDataService.getPriceData($scope.ticker);
 
     promise.then(function(data) {
-      console.log(data);
+      //console.log(data);
       $scope.stockPriceData = data;
     });
   }
@@ -89,9 +92,81 @@ function($scope, $stateParams, stockDataService, dateService) {
     var promise = stockDataService.getDetailsData($scope.ticker);
 
     promise.then(function(data) {
-      console.log(data);
+      //console.log(data);
       $scope.stockDetailsData = data;
+
     });
   }
+
+function getChartData() {
+
+  var promise = chartDataService.getHistoricalData($scope.ticker, $scope.oneYearAgoDate, $scope.todayDate);
+
+  promise.then(function(data) {
+    $scope.myData = JSON.parse(data)
+      .map(function(series) {
+        series.values = series.values.map(function(d) { return {x: d[0], y: d[1] }; });
+        return series;
+      });
+  });
+}
+
+  	var xTickFormat = function(d) {
+  		var dx = $scope.myData[0].values[d] && $scope.myData[0].values[d].x || 0;
+  		if (dx > 0) {
+        return d3.time.format("%b %d")(new Date(dx));
+  		}
+  		return null;
+  	};
+
+    var x2TickFormat = function(d) {
+      var dx = $scope.myData[0].values[d] && $scope.myData[0].values[d].x || 0;
+      return d3.time.format('%b %Y')(new Date(dx));
+    };
+
+    var y1TickFormat = function(d) {
+      return d3.format(',f')(d);
+    };
+
+    var y2TickFormat = function(d) {
+      return d3.format('s')(d);
+    };
+
+    var y3TickFormat = function(d) {
+      return d3.format(',.2s')(d);
+    };
+
+    var y4TickFormat = function(d) {
+      return d3.format(',.2s')(d);
+    };
+
+    var xValueFunction = function(d, i) {
+      return i;
+    };
+
+    var marinBottom = ($window.innerWidth / 100) * 10;
+
+  	$scope.chartOptions = {
+      chartType: 'linePlusBarWithFocusChart',
+      data: 'myData',
+      margin: {top: 15, right: 40, bottom: marinBottom, left: 70},
+      interpolate: "cardinal",
+      useInteractiveGuideline: false,
+      yShowMaxMin: false,
+      tooltips: false,
+      showLegend: false,
+      useVoronoi: false,
+      xShowMaxMin: false,
+      xValue: xValueFunction,
+      xAxisTickFormat: xTickFormat,
+      x2AxisTickFormat: x2TickFormat,
+      y1AxisTickFormat: y1TickFormat,
+      y2AxisTickFormat: y2TickFormat,
+      y3AxisTickFormat: y3TickFormat,
+      y4AxisTickFormat: y4TickFormat,
+      transitionDuration: 500
+  	};
+
+
 
 }]);
