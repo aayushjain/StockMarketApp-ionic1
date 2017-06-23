@@ -46,18 +46,19 @@ angular.module('myApp.controllers', [])
 
     $scope.myStocksArray = [
         {ticker: "AAPL"},
-        {ticker: "GPRO"},
+        {ticker: "AMZN"},
         {ticker: "FB"},
+        {ticker: "GOOGL"},
         {ticker: "NFLX"},
         {ticker: "MSFT"},
-        {ticker: "GE"},
+        {ticker: "HPQ"},
         {ticker: "TSLA"},
-        {ticker: "BAC"},
-        {ticker: "C"},
-        {ticker: "T"}
+        {ticker: "ORCL"},
+        {ticker: "T"},
+        {ticker: "YHOO"},
+        {ticker: "ADBE"}
     ];
 }])
-
 .controller('StockCtrl', ['$scope', '$stateParams', '$window', 'stockDataService', 'dateService', 'chartDataService',
 function($scope, $stateParams, $window, stockDataService, dateService, chartDataService) {
 

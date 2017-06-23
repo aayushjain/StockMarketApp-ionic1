@@ -63,9 +63,9 @@
       </div>
       <div class="row row-center">
         <div class="col">Volume:</div>
-        <div class="col">{{stockDetailsData.Volume}}</div>
+        <div class="col">{{stockDetailsData.Volume | shrinkNumber:2}}</div>
         <div class="col">Avg. Vol:</div>
-        <div class="col">{{stockDetailsData.AverageDailyVolume}}</div>
+        <div class="col">{{stockDetailsData.AverageDailyVolume | shrinkNumber:2}}</div>
       </div>
       <div class="row row-center">
         <div class="col">Mkt Cap:</div>
