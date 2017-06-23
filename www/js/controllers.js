@@ -41,6 +41,7 @@ angular.module('myApp.controllers', [])
   };
 })
 
+
 .controller('MyStocksCtrl', ['$scope',
   function($scope) {
 
@@ -61,6 +62,8 @@ angular.module('myApp.controllers', [])
         {ticker: "ADBE"}
     ];
 }])
+
+
 .controller('StockCtrl', ['$scope', '$stateParams', '$window', 'stockDataService', 'dateService', 'chartDataService',
 function($scope, $stateParams, $window, stockDataService, dateService, chartDataService) {
 
@@ -72,7 +75,7 @@ function($scope, $stateParams, $window, stockDataService, dateService, chartData
   //console.log(dateService.currentDate());
   //console.log(dateService.oneYearAgoDate());
 
-  $scope.$on("$ionicView.afterEnter", function() {
+  $scope.$on("$ionicView.beforeEnter", function() {
     getPriceData();
     getDetailsData();
     getChartData();

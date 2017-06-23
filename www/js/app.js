@@ -24,7 +24,13 @@ angular.module('myApp', [
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+  $ionicConfigProvider.views.transition('ios');
+  $ionicConfigProvider.navBar.alignTitle('center').positionPrimaryButtons('left');
+  $ionicConfigProvider.backButton.icon('ion-chevron-left');
+  $ionicConfigProvider.backButton.text('');
+
+
   $stateProvider
 
     .state('app', {
