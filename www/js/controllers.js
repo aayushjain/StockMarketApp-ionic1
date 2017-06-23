@@ -150,7 +150,7 @@ function getChartData() {
   	$scope.chartOptions = {
       chartType: 'linePlusBarWithFocusChart',
       data: 'myData',
-      margin: {top: 15, right: 40, bottom: marinBottom, left: 70},
+      margin: {top: 15, right: 0, bottom: marinBottom, left: 0},
       interpolate: "cardinal",
       useInteractiveGuideline: false,
       yShowMaxMin: false,
@@ -165,7 +165,10 @@ function getChartData() {
       y2AxisTickFormat: y2TickFormat,
       y3AxisTickFormat: y3TickFormat,
       y4AxisTickFormat: y4TickFormat,
-      transitionDuration: 500
+      transitionDuration: 500,
+      y1AxisLabel: 'Price',
+      y3AxisLabel: 'Volume',
+      noData: 'Loading data...'
   	};
 
 

@@ -1,4 +1,4 @@
-<ion-view view-title={{ticker}}>
+<ion-view view-title={{ticker}} drag-content="false">
 
   <div class="bar bar-subheader bar-light">
 
@@ -18,7 +18,7 @@
 
   </div>
 
-  <ion-content class="has-subheader">
+  <ion-content class="has-subheader" scrollbar-y="false">
 
     <div class="button-bar">
       <a ng-click="chartViewFunc(1)" ng-class="chartView == 1 ? 'active' : ''" class="button">Day</a>
@@ -31,7 +31,7 @@
     <img ng-if="chartView == 1" ng-src="https://www.google.com/finance/getchart?q={{ticker}}&p=1d&i=60" style="width: 100%">
     <img ng-if="chartView == 2" ng-src="https://www.google.com/finance/getchart?q={{ticker}}&p=5d&i=240" style="width: 100%">
     <img ng-if="chartView == 3" ng-src="https://www.google.com/finance/getchart?q={{ticker}}&p=3M&i=86400" style="width: 100%">
-    <div ng-if="chartView == 4" nv-chart="chartOptions" style="height: 70vh;"></div>
+    <div ng-if="chartView == 4" nv-chart="chartOptions" id="interactiveChart"></div>
     <img ng-if="chartView == 5" ng-src="https://www.google.com/finance/getchart?q={{ticker}}&p=40Y&i=604800" style="width: 100%">
 
 
