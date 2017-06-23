@@ -1,4 +1,101 @@
 
+/* Market data card */
+
+#market-data-card {
+  font-size: 3.25vmin;
+}
+
+#market-data-card {
+  font-weight: bolder;
+}
+
+#market-data-card .col-20:last-of-type {
+  text-align: right;
+}
+
+#market-data-card .last-trade {
+  font-size: 3vmin;
+  float: right;
+}
+
+
+/* Stock navbar */
+
+#stock-navbar ion-header-bar {
+  border: none;
+}
+
+#stock-navbar .back-text {
+  font-size: 11pt;
+}
+
+
+
+/* Stock subheader bar */
+
+#stock-subheader-bar {
+  border-top: none;
+}
+
+#stock-name {
+  color: #333;
+  float: left;
+  font-size: 3.5vmin;
+  font-weight: normal;
+  margin: auto;
+  max-width: 33vw;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+}
+
+#stock-price {
+  font-size: 7vmin;
+  line-height: 32pt;
+}
+
+#stock-change {
+  font-size: 4vmin;
+  font-weight: bolder;
+  float: right;
+  line-height: 12pt;
+  margin: auto 0;
+}
+
+/* Short button bar */
+
+#short-button-bar .button {
+  line-height: normal;
+  min-height: 10px;
+  border: none;
+  border-radius: o;
+  font-size: 9pt;
+  background-color: : #fff;
+}
+
+#short-button-bar .button.active {
+  font-weight: bold;
+}
+
+#short-button-bar {
+  -webkit-box-shadow: 0px 0px 0px 1px #ddd;
+}
+
+
+
+/* Helper Styles */
+
+.display-flex {
+  display: flex !important;
+}
+
+.no-margin {
+  margin: 0 !important;
+}
+
+
+
+
 /* Chart Styles */
 
 #interactiveChart{

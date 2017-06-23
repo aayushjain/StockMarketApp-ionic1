@@ -54,8 +54,10 @@ angular.module('myApp.controllers', [])
         {ticker: "HPQ"},
         {ticker: "TSLA"},
         {ticker: "ORCL"},
-        {ticker: "T"},
+        {ticker: "BAC"},
         {ticker: "YHOO"},
+        {ticker: "C"},
+        {ticker: "T"},
         {ticker: "ADBE"}
     ];
 }])
@@ -86,6 +88,14 @@ function($scope, $stateParams, $window, stockDataService, dateService, chartData
     promise.then(function(data) {
       //console.log(data);
       $scope.stockPriceData = data;
+
+      if(data.c >= 0 && data !== null){
+        $scope.reactiveColor = {'background-color': '#33cd5f'};
+      }
+      else if(data.c < 0 && data !== null) {
+        $scope.reactiveColor = {'background-color': '#ef473a'};
+      }
+
     });
   }
 
