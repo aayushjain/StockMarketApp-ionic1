@@ -30,25 +30,76 @@ angular.module('myApp.services', [])
 
 })
 
-.factory('stockDataService', function($q, $http, encodeURIService)  {
+
+.factory('chartDataCacheService', function(CacheFactory) {
+
+  var chartDataCache;
+
+  if(!CacheFactory.get('chartDataCache')) {
+    chartDataCache = CacheFactory('chartDataCache', {
+      maxAge: 60 * 60 * 1000,
+      deleteOnExpire: 'aggressive',
+      storageMode: 'localStorage'
+    });
+  }
+  else {
+    chartDataCache = CacheFactory.get('chartDataCache');
+  }
+
+  return chartDataCache;
+
+})
+
+
+.factory('stockDetailsCacheService', function(CacheFactory) {
+
+  var stockDetailsCache;
+
+  if (!CacheFactory.get('stockDetailsCache')) {
+    stockDetailsCache = CacheFactory('stockDetailsCache', {
+      maxAge: 60 * 1000,
+      deleteOnExpire: 'aggressive',
+      storageMode: 'localStorage'
+    });
+  }
+  else {
+    stockDetailsCache = CacheFactory.get('stockDetailsCache');
+  }
+
+  return stockDetailsCache;
+
+})
+
+
+.factory('stockDataService', function($q, $http, encodeURIService, stockDetailsCacheService)  {
 
   var getDetailsData = function(ticker) {
 
     var deferred = $q.defer(),
+    cacheKey = ticker,
+    stockDetailsCache = stockDetailsCacheService.get(cacheKey),
+
     query = 'select * from yahoo.finance.quotes where symbol in ("' + ticker +'")',
     url = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIService.encode(query) +'&format=json&env=store://datatables.org/alltableswithkeys';
 
     //console.log(url);
 
-    $http.get(url)
-    .success(function(json) {
-      var jsonData = json.query.results.quote;
-      deferred.resolve(jsonData);
-    })
-    .error(function(error) {
-      console.log("Details data error: " + error);
-      deferred.reject();
-    });
+    if(stockDetailsCache){
+      deferred.resolve(stockDetailsCache);
+    }
+      else {
+        $http.get(url)
+      .success(function(json) {
+        var jsonData = json.query.results.quote;
+        deferred.resolve(jsonData);
+        console.log(jsonData);
+        stockDetailsCacheService.put(cacheKey, jsonData);
+      })
+      .error(function(error) {
+        console.log("Details data error: " + error);
+        deferred.reject();
+      });
+      }
 
     return deferred.promise;
 
@@ -86,19 +137,26 @@ angular.module('myApp.services', [])
 })
 
 
-.factory('chartDataService', function($q, $http, encodeURIService) {
+.factory('chartDataService', function($q, $http, encodeURIService, chartDataCacheService) {
 
   var getHistoricalData = function(ticker, fromDate, todayDate) {
 
     var deferred = $q.defer(),
     apiKey = keys.quandl_api_key,
+
+    cacheKey = ticker,
+    chartDataCache = chartDataCacheService.get(cacheKey),
+
     //query = 'select * from yahoo.finance.historicaldata where symbol = "' + ticker + '" and startDate = "' + fromDate + '" and endDate = "' + todayDate +'" ';
     //url = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIService.encode(query) +'&format=json&env=store://datatables.org/alltableswithkeys';
-
     //url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + ticker + '&apikey=' + apiKey + '&start_date=' + fromDate +'&end_date='+ todayDate;
     url = 'https://www.quandl.com/api/v3/datasets/WIKI/' + ticker + '/data.json?start_date=' + fromDate + '&end_date=' + todayDate + '&api_key='+ apiKey;
 
-    $http.get(url)
+    if(chartDataCache){
+      deferred.resolve(chartDataCache);
+    }
+    else {
+      $http.get(url)
       .success(function(json) {
         var jsonData = json.dataset_data.data;
 
@@ -134,6 +192,7 @@ angular.module('myApp.services', [])
       '}]';
 
         deferred.resolve(formattedChartData);
+        chartDataCacheService.put(cacheKey, formattedChartData);
       })
 
 
@@ -141,9 +200,11 @@ angular.module('myApp.services', [])
         console.log("Chart data error: " + error);
         deferred.reject();
       });
+    }
 
     return deferred.promise;
   };
+
 
   return {
     getHistoricalData: getHistoricalData

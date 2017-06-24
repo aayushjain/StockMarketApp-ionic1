@@ -75,7 +75,7 @@ function($scope, $stateParams, $window, stockDataService, dateService, chartData
   //console.log(dateService.currentDate());
   //console.log(dateService.oneYearAgoDate());
 
-  $scope.$on("$ionicView.beforeEnter", function() {
+  $scope.$on("$ionicView.afterEnter", function() {
     getPriceData();
     getDetailsData();
     getChartData();
