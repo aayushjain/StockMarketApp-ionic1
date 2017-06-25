@@ -129,7 +129,7 @@ angular.module('myApp.services', [])
 
     var deferred = $q.defer(),
     //apiKey = keys.alphavantage_api_key,
-    url = 'http://finance.google.com/finance/info?client=ig&q=' + ticker;
+    url = 'https://finance.google.com/finance/info?client=ig&q=' + ticker;
     //url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&apikey='+ apiKey + '&symbol=' + ticker;
 
     $http.get(url)
@@ -263,5 +263,37 @@ angular.module('myApp.services', [])
   };
 
 })
+
+
+
+.factory('newsService', function($q, $http, encodeURIService) {
+
+  return {
+    getNews: function(ticker) {
+
+      var deferred = $q.defer(),
+
+      query = 'select * from rss where url="http://feeds.finance.yahoo.com/rss/2.0/headline?s=' + ticker + '"',
+      url = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIService.encode(query) +'&format=json&env=store://datatables.org/alltableswithkeys';
+
+      $http.get(url)
+      .success (function(json) {
+        
+        jsonData = json.query.results.item;
+        // console.log(jsonData);
+        deferred.resolve(jsonData);
+      })
+      .error(function() {
+        deferred.reject();
+        console.log("News error: " + error);
+      });
+
+      return deferred.promise;
+    }
+  };
+
+})
+
+
 
 ;
