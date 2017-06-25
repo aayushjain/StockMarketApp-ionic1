@@ -71,6 +71,22 @@ angular.module('myApp.services', [])
 })
 
 
+.factory('notesCacheService', function(CacheFactory) {
+  var notescache;
+
+  if (!CacheFactory.get('notesCache')) {
+    notesCache = CacheFactory('notesCache', {
+      storageMode: 'localStorage'
+    });
+  }
+  else {
+    notesCache = CacheFactory.get('notesCache');
+  }
+
+  return notesCache;
+})
+
+
 .factory('stockDataService', function($q, $http, encodeURIService, stockDetailsCacheService)  {
 
   var getDetailsData = function(ticker) {
@@ -92,7 +108,7 @@ angular.module('myApp.services', [])
       .success(function(json) {
         var jsonData = json.query.results.quote;
         deferred.resolve(jsonData);
-        console.log(jsonData);
+        // console.log(jsonData);
         stockDetailsCacheService.put(cacheKey, jsonData);
       })
       .error(function(error) {
@@ -208,6 +224,42 @@ angular.module('myApp.services', [])
 
   return {
     getHistoricalData: getHistoricalData
+  };
+
+})
+
+.factory('notesService',function(notesCacheService) {
+
+  return {
+    getNotes: function(ticker) {
+      return notesCacheService.get(ticker);
+    },
+
+    addNote: function(ticker, note) {
+
+      var stockNotes = [];
+
+      if (notesCacheService.get(ticker)) {
+        stockNotes = notesCacheService.get(ticker);
+        stockNotes.push(note);
+      }
+      else {
+        stockNotes.push(note);
+      }
+
+      notesCacheService.put(ticker, stockNotes);
+    },
+
+    deleteNote: function(ticker, index) {
+
+      var stockNotes = [];
+
+      stockNotes = notesCacheService.get(ticker);
+      stockNotes.splice(index, 1);
+      notesCacheService.put(ticker, stockNotes);
+
+    }
+
   };
 
 })
