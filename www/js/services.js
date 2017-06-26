@@ -278,10 +278,10 @@ angular.module('myApp.services', [])
 
       $http.get(url)
       .success (function(json) {
-        
+
         jsonData = json.query.results.item;
-        // console.log(jsonData);
-        deferred.resolve(jsonData);
+        cleanedData = JSON.parse(JSON.stringify(jsonData).replace(/&apos;/g, "\’").replace(/&#39;/g, "\'").replace(/&quot;/g, "\\\"").replace(/[‘’]/g, "\'"));
+        deferred.resolve(cleanedData);
       })
       .error(function() {
         deferred.reject();
