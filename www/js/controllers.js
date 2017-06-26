@@ -42,35 +42,22 @@ angular.module('myApp.controllers', [])
 })
 
 
-.controller('MyStocksCtrl', ['$scope',
-  function($scope) {
+.controller('MyStocksCtrl', ['$scope', 'myStocksArrayService',
+  function($scope, myStocksArrayService) {
 
-    $scope.myStocksArray = [
-        {ticker: "AAPL"},
-        {ticker: "AMZN"},
-        {ticker: "FB"},
-        {ticker: "GOOGL"},
-        {ticker: "NFLX"},
-        {ticker: "MSFT"},
-        {ticker: "HPQ"},
-        {ticker: "TSLA"},
-        {ticker: "ORCL"},
-        {ticker: "BAC"},
-        {ticker: "YHOO"},
-        {ticker: "C"},
-        {ticker: "T"},
-        {ticker: "ADBE"}
-    ];
+    $scope.myStocksArray = myStocksArrayService;
+
 }])
 
 
-.controller('StockCtrl', ['$scope', '$stateParams', '$window', '$ionicPopup', 'stockDataService', 'dateService', 'chartDataService', 'notesService', 'newsService',
-function($scope, $stateParams, $window, $ionicPopup, stockDataService, dateService, chartDataService, notesService, newsService) {
+.controller('StockCtrl', ['$scope', '$stateParams', '$window', '$ionicPopup', 'followStockService', 'stockDataService', 'dateService', 'chartDataService', 'notesService', 'newsService',
+function($scope, $stateParams, $window, $ionicPopup, followStockService, stockDataService, dateService, chartDataService, notesService, newsService) {
 
   $scope.ticker = $stateParams.StockTicker;
   $scope.chartView = 4;
   $scope.oneYearAgoDate = dateService.oneYearAgoDate();
   $scope.todayDate = dateService.currentDate();
+  $scope.following = followStockService.checkFollowing($scope.ticker);
 
   $scope.stockNotes = [];
 
@@ -85,6 +72,17 @@ function($scope, $stateParams, $window, $ionicPopup, stockDataService, dateServi
     getNews();
     $scope.stockNotes = notesService.getNotes($scope.ticker);
   });
+
+  $scope.toggleFollow = function() {
+    if($scope.following) {
+      followStockService.unfollow($scope.ticker);
+      $scope.following = false;
+    }
+    else {
+      followStockService.follow($scope.ticker);
+      $scope.following = true;
+    }
+  };
 
   $scope.chartViewFunc = function(n) {
       $scope.chartView = n;
@@ -178,10 +176,10 @@ note.then(function(res) {
       $scope.stockPriceData = data;
 
       if(data.c >= 0 && data !== null){
-        $scope.reactiveColor = {'background-color': '#33cd5f'};
+        $scope.reactiveColor = {'background-color': '#33cd5f', 'border-color': 'rgba(255,255,255,.3)'};
       }
       else if(data.c < 0 && data !== null) {
-        $scope.reactiveColor = {'background-color': '#ef473a'};
+        $scope.reactiveColor = {'background-color': '#ef473a', 'border-color': 'rgba(0,0,0,.2)'};
       }
 
     });
