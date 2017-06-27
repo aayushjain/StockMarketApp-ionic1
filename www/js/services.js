@@ -9,6 +9,53 @@ angular.module('myApp.services', [])
   };
 })
 
+.service('modalService', function($ionicModal) {
+
+  this.openModal = function(id) {
+
+    var _this = this;
+
+    if(id == 1) {
+      $ionicModal.fromTemplateUrl('templates/search.html', {
+        scope: null,
+        controller: 'SearchCtrl'
+      }).then(function(modal) {
+        _this.modal = modal;
+        _this.modal.show();
+      });
+    }
+    else if(id == 2) {
+      $ionicModal.fromTemplateUrl('templates/login.html', {
+        scope: null,
+        controller: 'LoginSearchCtrl'
+      }).then(function(modal) {
+        _this.modal = modal;
+        _this.modal.show();
+      });
+    }
+    else if(id == 3) {
+      $ionicModal.fromTemplateUrl('templates/signup.html', {
+        scope: null,
+        controller: 'LoginSearchCtrl'
+      }).then(function(modal) {
+        _this.modal = modal;
+        _this.modal.show();
+      });
+    }
+  };
+
+  this.closeModal = function() {
+
+    var _this = this;
+
+    if(!_this.modal) return;
+    _this.modal.hide();
+    _this.modal.remove();
+  };
+
+})
+
+
 .factory('dateService', function($filter) {
 
   var currentDate = function(){
@@ -201,7 +248,6 @@ angular.module('myApp.services', [])
     query = 'select * from yahoo.finance.quotes where symbol in ("' + ticker +'")',
     url = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIService.encode(query) +'&format=json&env=store://datatables.org/alltableswithkeys';
 
-    //console.log(url);
 
     if(stockDetailsCache){
       deferred.resolve(stockDetailsCache);
@@ -211,7 +257,6 @@ angular.module('myApp.services', [])
       .success(function(json) {
         var jsonData = json.query.results.quote;
         deferred.resolve(jsonData);
-        // console.log(jsonData);
         stockDetailsCacheService.put(cacheKey, jsonData);
       })
       .error(function(error) {
@@ -378,7 +423,6 @@ angular.module('myApp.services', [])
 
       query = 'select * from rss where url="http://feeds.finance.yahoo.com/rss/2.0/headline?s=' + ticker + '"',
       url = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIService.encode(query) +'&format=json&env=store://datatables.org/alltableswithkeys';
-
       $http.get(url)
       .success (function(json) {
 
@@ -397,6 +441,42 @@ angular.module('myApp.services', [])
 
 })
 
+
+.factory('searchService', function($q, $http, encodeURIService) {
+
+  return {
+
+    search: function(query) {
+
+      var deferred = $q.defer(),
+
+      cleanResults = [],
+
+      string = 'select * from json where url="https://s.yimg.com/aq/autoc?region=CA&lang=en-CA&query=' + query + '"';
+      url = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIService.encode(string) + '&format=json&env=store://datatables.org/alltableswithkeys';
+
+      $http.get(url)
+      .success(function(data) {
+        var jsonData = data.query.results.ResultSet.Result;
+
+        if(jsonData) {
+          for (var i = 0; i < jsonData.length; i++) {
+            if((jsonData[i].exch == 'NMS') || (jsonData[i].exch == 'NYQ')) {
+              cleanResults.push(jsonData[i]);
+            }
+          }
+        }
+
+        deferred.resolve(cleanResults);
+      })
+      .error(function(error) {
+        console.log("Search error: " + error);
+      });
+
+      return deferred.promise;
+    }
+  };
+})
 
 
 ;
