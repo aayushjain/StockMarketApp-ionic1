@@ -118,6 +118,26 @@ angular.module('myApp.services', [])
 })
 
 
+.factory('stockPriceCacheService', function(CacheFactory) {
+
+  var stockPriceCache;
+
+  if (!CacheFactory.get('stockPriceCache')) {
+    stockPriceCache = CacheFactory('stockPriceCache', {
+      maxAge: 2 * 1000,
+      deleteOnExpire: 'aggressive',
+      storageMode: 'localStorage'
+    });
+  }
+  else {
+    stockPriceCache = CacheFactory.get('stockPriceCache');
+  }
+
+  return stockPriceCache;
+
+})
+
+
 .factory('notesCacheService', function(CacheFactory) {
   var notescache;
 
@@ -237,7 +257,7 @@ angular.module('myApp.services', [])
 })
 
 
-.factory('stockDataService', function($q, $http, encodeURIService, stockDetailsCacheService)  {
+.factory('stockDataService', function($q, $http, encodeURIService, stockDetailsCacheService, stockPriceCacheService)  {
 
   var getDetailsData = function(ticker) {
 
@@ -276,14 +296,17 @@ angular.module('myApp.services', [])
     //https://www.quandl.com/api/v3/datasets/WIKI/FB.json?&start_date=2017-05-11&end_date=2017-06-20&api_key=
 
     var deferred = $q.defer(),
+
+    cacheKey = ticker;
     //apiKey = keys.alphavantage_api_key,
     url = 'https://finance.google.com/finance/info?client=ig&q=' + ticker;
     //url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&apikey='+ apiKey + '&symbol=' + ticker;
 
     $http.get(url)
     .success(function(json) {
-      var jsonData = JSON.parse(json.replace(/\//g,''));
-      deferred.resolve(jsonData[0]);
+      var jsonData = JSON.parse(json.replace(/\//g,''))[0];
+      deferred.resolve(jsonData);
+      stockPriceCacheService.put(cacheKey, jsonData);
     })
     .error(function(error) {
       console.log("Price data error: " + error);
