@@ -1,5 +1,6 @@
 angular.module('myApp', [
   'ionic',
+  'ngCordova',
   'angular-cache',
   'nvd3',
   'nvChart',

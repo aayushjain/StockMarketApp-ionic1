@@ -38,8 +38,8 @@ angular.module('myApp.controllers', [])
 }])
 
 
-.controller('StockCtrl', ['$scope', '$stateParams', '$window', '$ionicPopup', 'followStockService', 'stockDataService', 'dateService', 'chartDataService', 'notesService', 'newsService',
-function($scope, $stateParams, $window, $ionicPopup, followStockService, stockDataService, dateService, chartDataService, notesService, newsService) {
+.controller('StockCtrl', ['$scope', '$stateParams', '$window', '$ionicPopup', '$cordovaInAppBrowser', 'followStockService', 'stockDataService', 'dateService', 'chartDataService', 'notesService', 'newsService',
+function($scope, $stateParams, $window, $ionicPopup, $cordovaInAppBrowser, followStockService, stockDataService, dateService, chartDataService, notesService, newsService) {
 
   $scope.ticker = $stateParams.StockTicker;
   $scope.chartView = 4;
@@ -77,8 +77,13 @@ function($scope, $stateParams, $window, $ionicPopup, followStockService, stockDa
   };
 
   $scope.openWindow = function(link) {
-    //TODO install and setup inAppBrowser
-    console.log("open broswer => " + link);
+    var inAppBrowserOptions = {
+      location: 'yes',
+      clearcache: 'yes',
+      toolbar: 'yes'
+    };
+
+    $cordovaInAppBrowser.open(link, '_blank', inAppBrowserOptions);
   };
 
   $scope.addNote = function() {
