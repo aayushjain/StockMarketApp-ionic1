@@ -1,0 +1,26 @@
+export interface ServerOptions {
+    projectRoot: string;
+    wwwDir: string;
+    address: string;
+    port: number;
+    httpPort: number;
+    livereloadPort: number;
+    browser: string | undefined;
+    browseroption: string | undefined;
+    platform: string | undefined;
+    consolelogs: boolean;
+    serverlogs: boolean;
+    nobrowser: boolean;
+    nolivereload: boolean;
+    noproxy: boolean;
+    lab: boolean;
+    iscordovaserve: boolean;
+}
+export declare const WATCH_PATTERNS: string[];
+export declare const LOGGER_DIR = "__ion-dev-server";
+export declare const IONIC_LAB_URL = "/ionic-lab";
+export declare const DEFAULT_ADDRESS = "0.0.0.0";
+export declare const DEFAULT_LIVERELOAD_PORT = 35729;
+export declare const DEFAULT_SERVER_PORT = 8100;
+export declare const IOS_PLATFORM_PATH: string;
+export declare const ANDROID_PLATFORM_PATH: string;

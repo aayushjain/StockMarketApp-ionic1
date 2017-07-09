@@ -1,0 +1,111 @@
+<ion-view view-title={{ticker}} drag-content="false">
+
+  <ion-nav-bar id="stock-navbar" class="bar-dark ng-style:reactiveColor">
+    <ion-nav-back-button></ion-nav-back-button>
+  </ion-nav-bar>
+
+  <ion-nav-buttons side="right">
+    <button class="button icon-left ng-style:reactiveColor" ng-class="following ? 'ion-ios-checkmark-empty':'ion-ios-plus'" ng-bind="following ? ' Following' : ' Follow'" ng-click="toggleFollow()"></button>
+  </ion-nav-buttons>
+
+  <div class="bar bar-subheader bar-light" id="stock-subheader-bar">
+
+    <div class="buttons" side="left">
+      <div class="button button-clear display-flex">
+        <h6 id="stock-name">{{stockDetailsData.Name}}</h6>
+      </div>
+    </div>
+
+    <h2 class="title button-left button-right" id="stock-price">{{stockPriceData.l}}</h2>
+
+    <div class="buttons" side="right">
+      <div class="button button-clear">
+        <h6 id="stock-change" ng-class="stockPriceData.cp < 0 ? 'assertive' : 'balanced'">{{stockPriceData.c}}<br>(<span ng-if="stockPriceData.c > 0">+</span>{{stockPriceData.cp}}%)</h6>
+      </div>
+    </div>
+
+  </div>
+
+  <ion-content class="has-subheader" scrollbar-y="false">
+
+    <div class="button-bar" id="short-button-bar">
+      <a ng-click="chartViewFunc(1)" ng-class="chartView == 1 ? 'active' : ''" class="button">Day</a>
+      <a ng-click="chartViewFunc(2)" ng-class="chartView == 2 ? 'active' : ''" class="button">Week</a>
+      <a ng-click="chartViewFunc(3)" ng-class="chartView == 3 ? 'active' : ''" class="button">3m</a>
+      <a ng-click="chartViewFunc(4)" ng-class="chartView == 4 ? 'active' : ''" class="button">Year</a>
+      <a ng-click="chartViewFunc(5)" ng-class="chartView == 5 ? 'active' : ''" class="button">Max</a>
+    </div>
+
+    <img ng-if="chartView == 1" ng-src="https://www.google.com/finance/getchart?q={{ticker}}&p=1d&i=60" style="width: 100%">
+    <img ng-if="chartView == 2" ng-src="https://www.google.com/finance/getchart?q={{ticker}}&p=5d&i=240" style="width: 100%">
+    <img ng-if="chartView == 3" ng-src="https://www.google.com/finance/getchart?q={{ticker}}&p=3M&i=86400" style="width: 100%">
+    <div ng-if="chartView == 4" nv-chart="chartOptions" id="interactiveChart"></div>
+    <img ng-if="chartView == 5" ng-src="https://www.google.com/finance/getchart?q={{ticker}}&p=40Y&i=604800" style="width: 100%">
+
+
+    <div class="card" id="market-data-card">
+      <div class="item item-divider">Market Data <span class="last-trade">Last trade: {{stockPriceData.lt_dts | date:'h:mm a'}}</span></div>
+      <div class="row row-center">
+        <div class="col">Ask:</div>
+        <div class="col col-20">{{stockDetailsData.Ask}}</div>
+        <div class="col">Bid:</div>
+        <div class="col col-20">{{stockDetailsData.Bid}}</div>
+      </div>
+      <div class="row row-center">
+        <div class="col">Prev Close:</div>
+        <div class="col col-20">{{stockDetailsData.LastTradePriceOnly}}</div>
+        <div class="col">Open:</div>
+        <div class="col col-20">{{stockDetailsData.Open}}</div>
+      </div>
+      <div class="row row-center">
+        <div class="col">Day High:</div>
+        <div class="col col-20">{{stockDetailsData.DaysHigh}}</div>
+        <div class="col">Day Low:</div>
+        <div class="col col-20">{{stockDetailsData.DaysLow}}</div>
+      </div>
+      <div class="row row-center">
+        <div class="col">52w High:</div>
+        <div class="col col-20">{{stockDetailsData.YearHigh}}</div>
+        <div class="col">52w Low:</div>
+        <div class="col col-20">{{stockDetailsData.YearLow}}</div>
+      </div>
+      <div class="row row-center">
+        <div class="col">Volume:</div>
+        <div class="col col-20">{{stockDetailsData.Volume | shrinkNumber:2}}</div>
+        <div class="col">Avg. Vol:</div>
+        <div class="col col-20">{{stockDetailsData.AverageDailyVolume | shrinkNumber:2}}</div>
+      </div>
+      <div class="row row-center">
+        <div class="col">Mkt Cap:</div>
+        <div class="col col-20">{{stockDetailsData.MarketCapitalization}}</div>
+        <div class="col">EBITDA:</div>
+        <div class="col col-20">{{stockDetailsData.EBITDA}}</div>
+      </div>
+      <div class="row row-center">
+        <div class="col">P/E:</div>
+        <div class="col col-20">{{stockDetailsData.PERatio}}</div>
+        <div class="col">EPS:</div>
+        <div class="col col-20">{{stockDetailsData.EPSEstimateCurrentYear}}</div>
+      </div>
+    </div>
+
+    <div class="card" id="stock-notes">
+      <div class="item item-divider">Notes <span ng-click="addNote()" class="add-stock-note">Add <i class="icon ion-ios-plus"></i></span></div>
+      <a class="item" ng-repeat="note in stockNotes track by $index" ng-click="openNote($index, note.title, note.body)">
+        <h2>{{note.title}}</h2>
+        <h6>{{note.date | date: 'M/d/yy'}}</h6>
+      </a>
+    </div>
+
+    <div class="card" id="stock-news">
+      <div class="item item-divider">News</div>
+      <a class="item item-icon-right" ng-repeat="story in newsStories" ng-click="openWindow( story.link )">
+        <h2>{{story.title}}</h2>
+        <h6>{{story.pubDate | characters:17:false:false}}</h6>
+        <p ng-if="story.description.length > 0">{{story.description | characters:200:false:true}}</p>
+        <i class="icon ion-ios-arrow-right"></i>
+      </a>
+    </div>
+
+  </ion-content>
+</ion-view>
