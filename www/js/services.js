@@ -1,13 +1,5 @@
 angular.module('myApp.services', [])
 
-.factory('encodeURIService', function() {
-  return {
-    encode: function(string){
-      //console.log(string);
-      return encodeURIComponent(string).replace(/\"/g, "%22").replace(/\ /g, "%20").replace(/[!'()]/g, escape);
-    }
-  };
-})
 
 .service('modalService', function($ionicModal) {
 
@@ -15,7 +7,7 @@ angular.module('myApp.services', [])
 
     var _this = this;
 
-    if(id == 1) {
+    if (id == 1) {
       $ionicModal.fromTemplateUrl('templates/search.html', {
         scope: null,
         controller: 'SearchCtrl'
@@ -23,8 +15,7 @@ angular.module('myApp.services', [])
         _this.modal = modal;
         _this.modal.show();
       });
-    }
-    else if(id == 2) {
+    } else if (id == 2) {
       $ionicModal.fromTemplateUrl('templates/login.html', {
         scope: null,
         controller: 'LoginSearchCtrl'
@@ -32,8 +23,7 @@ angular.module('myApp.services', [])
         _this.modal = modal;
         _this.modal.show();
       });
-    }
-    else if(id == 3) {
+    } else if (id == 3) {
       $ionicModal.fromTemplateUrl('templates/signup.html', {
         scope: null,
         controller: 'LoginSearchCtrl'
@@ -48,7 +38,7 @@ angular.module('myApp.services', [])
 
     var _this = this;
 
-    if(!_this.modal) return;
+    if (!_this.modal) return;
     _this.modal.hide();
     _this.modal.remove();
   };
@@ -56,9 +46,18 @@ angular.module('myApp.services', [])
 })
 
 
+.factory('encodeURIService', function() {
+  return {
+    encode: function(string) {
+      return encodeURIComponent(string).replace(/\"/g, "%22").replace(/\ /g, "%20").replace(/[!'()]/g, escape);
+    }
+  };
+})
+
+
 .factory('dateService', function($filter) {
 
-  var currentDate = function(){
+  var currentDate = function() {
     var d = new Date();
     var date = $filter('date')(d, 'yyyy-MM-dd');
     return date;
@@ -82,14 +81,13 @@ angular.module('myApp.services', [])
 
   var chartDataCache;
 
-  if(!CacheFactory.get('chartDataCache')) {
+  if (!CacheFactory.get('chartDataCache')) {
     chartDataCache = CacheFactory('chartDataCache', {
       maxAge: 60 * 60 * 1000,
       deleteOnExpire: 'aggressive',
       storageMode: 'localStorage'
     });
-  }
-  else {
+  } else {
     chartDataCache = CacheFactory.get('chartDataCache');
   }
 
@@ -108,8 +106,7 @@ angular.module('myApp.services', [])
       deleteOnExpire: 'aggressive',
       storageMode: 'localStorage'
     });
-  }
-  else {
+  } else {
     stockDetailsCache = CacheFactory.get('stockDetailsCache');
   }
 
@@ -128,8 +125,7 @@ angular.module('myApp.services', [])
       deleteOnExpire: 'aggressive',
       storageMode: 'localStorage'
     });
-  }
-  else {
+  } else {
     stockPriceCache = CacheFactory.get('stockPriceCache');
   }
 
@@ -145,8 +141,7 @@ angular.module('myApp.services', [])
     notesCache = CacheFactory('notesCache', {
       storageMode: 'localStorage'
     });
-  }
-  else {
+  } else {
     notesCache = CacheFactory.get('notesCache');
   }
 
@@ -159,12 +154,11 @@ angular.module('myApp.services', [])
   var myStocksCache;
 
 
-  if(!CacheFactory.get('myStocksCache')) {
+  if (!CacheFactory.get('myStocksCache')) {
     myStocksCache = CacheFactory('myStocksCache', {
       storageMode: 'localStorage'
     });
-  }
-  else {
+  } else {
     myStocksCache = CacheFactory.get('myStocksCache');
   }
 
@@ -207,7 +201,7 @@ angular.module('myApp.services', [])
 
 .factory('myStocksArrayService', function(fillMyStocksCacheService, myStocksCacheService) {
 
-  if(!myStocksCacheService.info('myStocks')) {
+  if (!myStocksCacheService.info('myStocks')) {
     fillMyStocksCacheService.fillMyStocksCache();
   }
 
@@ -224,7 +218,9 @@ angular.module('myApp.services', [])
 
     follow: function(ticker) {
 
-      var stockToAdd = {"ticker": ticker};
+      var stockToAdd = {
+        "ticker": ticker
+      };
 
       myStocksArrayService.push(stockToAdd);
       myStocksCacheService.put('myStocks', myStocksArrayService);
@@ -233,7 +229,7 @@ angular.module('myApp.services', [])
     unfollow: function(ticker) {
 
       for (var i = 0; i < myStocksArrayService.length; i++) {
-        if(myStocksArrayService[i].ticker == ticker) {
+        if (myStocksArrayService[i].ticker == ticker) {
           myStocksArrayService.splice(i, 1);
           myStocksCacheService.remove('myStocks');
           myStocksCacheService.put('myStocks', myStocksArrayService);
@@ -246,7 +242,7 @@ angular.module('myApp.services', [])
     checkFollowing: function(ticker) {
 
       for (var i = 0; i < myStocksArrayService.length; i++) {
-        if(myStocksArrayService[i].ticker == ticker) {
+        if (myStocksArrayService[i].ticker == ticker) {
           return true;
         }
       }
@@ -257,7 +253,7 @@ angular.module('myApp.services', [])
 })
 
 
-.factory('stockDataService', function($q, $http, encodeURIService, stockDetailsCacheService, stockPriceCacheService)  {
+.factory('stockDataService', function($q, $http, encodeURIService, stockDetailsCacheService, stockPriceCacheService) {
 
   var getDetailsData = function(ticker) {
 
@@ -265,15 +261,14 @@ angular.module('myApp.services', [])
     cacheKey = ticker,
     stockDetailsCache = stockDetailsCacheService.get(cacheKey),
 
-    query = 'select * from yahoo.finance.quotes where symbol in ("' + ticker +'")',
-    url = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIService.encode(query) +'&format=json&env=store://datatables.org/alltableswithkeys';
+    query = 'select * from yahoo.finance.quotes where symbol in ("' + ticker + '")',
+    url = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIService.encode(query) + '&format=json&env=store://datatables.org/alltableswithkeys';
 
 
-    if(stockDetailsCache){
+    if (stockDetailsCache) {
       deferred.resolve(stockDetailsCache);
-    }
-      else {
-        $http.get(url)
+    } else {
+      $http.get(url)
       .success(function(json) {
         var jsonData = json.query.results.quote;
         deferred.resolve(jsonData);
@@ -283,7 +278,7 @@ angular.module('myApp.services', [])
         console.log("Details data error: " + error);
         deferred.reject();
       });
-      }
+    }
 
     return deferred.promise;
 
@@ -298,13 +293,13 @@ angular.module('myApp.services', [])
     var deferred = $q.defer(),
 
     cacheKey = ticker;
-    //apiKey = keys.alphavantage_api_key,
     url = 'https://finance.google.com/finance/info?client=ig&q=' + ticker;
+    //apiKey = keys.alphavantage_api_key,
     //url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&apikey='+ apiKey + '&symbol=' + ticker;
 
     $http.get(url)
     .success(function(json) {
-      var jsonData = JSON.parse(json.replace(/\//g,''))[0];
+      var jsonData = JSON.parse(json.replace(/\//g, ''))[0];
       deferred.resolve(jsonData);
       stockPriceCacheService.put(cacheKey, jsonData);
     })
@@ -334,15 +329,14 @@ angular.module('myApp.services', [])
     cacheKey = ticker,
     chartDataCache = chartDataCacheService.get(cacheKey),
 
-    //query = 'select * from yahoo.finance.historicaldata where symbol = "' + ticker + '" and startDate = "' + fromDate + '" and endDate = "' + todayDate +'" ';
-    //url = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIService.encode(query) +'&format=json&env=store://datatables.org/alltableswithkeys';
-    //url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + ticker + '&apikey=' + apiKey + '&start_date=' + fromDate +'&end_date='+ todayDate;
-    url = 'https://www.quandl.com/api/v3/datasets/WIKI/' + ticker + '/data.json?start_date=' + fromDate + '&end_date=' + todayDate + '&api_key='+ apiKey;
+    // query = 'select * from yahoo.finance.historicaldata where symbol = "' + ticker + '" and startDate = "' + fromDate + '" and endDate = "' + todayDate +'" ';
+    // url = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIService.encode(query) +'&format=json&env=store://datatables.org/alltableswithkeys';
+    // url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=' + ticker + '&apikey=' + apiKey + '&start_date=' + fromDate +'&end_date='+ todayDate;
+    url = 'https://www.quandl.com/api/v3/datasets/WIKI/' + ticker + '/data.json?start_date=' + fromDate + '&end_date=' + todayDate + '&api_key=' + apiKey;
 
-    if(chartDataCache){
+    if (chartDataCache) {
       deferred.resolve(chartDataCache);
-    }
-    else {
+    } else {
       $http.get(url)
       .success(function(json) {
         var jsonData = json.dataset_data.data;
@@ -360,23 +354,21 @@ angular.module('myApp.services', [])
           volumeDatum = '[' + date + ',' + volume + ']',
           priceDatum = '[' + date + ',' + price + ']';
 
-          //console.log(volumeDatum, priceDatum);
-
           volumeData.unshift(volumeDatum);
           priceData.unshift(priceDatum);
 
         });
 
-      var formattedChartData =
-      '[{' +
+        var formattedChartData =
+        '[{' +
         '"key":' + '"volume", ' +
         '"bar":' + 'true,' +
         '"values":' + '[' + volumeData + ']' +
-      '},' +
-      '{' +
+        '},' +
+        '{' +
         '"key":' + '"' + ticker + '",' +
         '"values":' + '[' + priceData + ']' +
-      '}]';
+        '}]';
 
         deferred.resolve(formattedChartData);
         chartDataCacheService.put(cacheKey, formattedChartData);
@@ -399,7 +391,8 @@ angular.module('myApp.services', [])
 
 })
 
-.factory('notesService',function(notesCacheService) {
+
+.factory('notesService', function(notesCacheService) {
 
   return {
     getNotes: function(ticker) {
@@ -413,8 +406,7 @@ angular.module('myApp.services', [])
       if (notesCacheService.get(ticker)) {
         stockNotes = notesCacheService.get(ticker);
         stockNotes.push(note);
-      }
-      else {
+      } else {
         stockNotes.push(note);
       }
 
@@ -436,7 +428,6 @@ angular.module('myApp.services', [])
 })
 
 
-
 .factory('newsService', function($q, $http, encodeURIService) {
 
   return {
@@ -445,9 +436,10 @@ angular.module('myApp.services', [])
       var deferred = $q.defer(),
 
       query = 'select * from rss where url="http://feeds.finance.yahoo.com/rss/2.0/headline?s=' + ticker + '"',
-      url = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIService.encode(query) +'&format=json&env=store://datatables.org/alltableswithkeys';
+      url = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIService.encode(query) + '&format=json&env=store://datatables.org/alltableswithkeys';
+
       $http.get(url)
-      .success (function(json) {
+      .success(function(json) {
 
         jsonData = json.query.results.item;
         cleanedData = JSON.parse(JSON.stringify(jsonData).replace(/&apos;/g, "\’").replace(/&#39;/g, "\'").replace(/&quot;/g, "\\\"").replace(/[‘’]/g, "\'"));
@@ -482,9 +474,9 @@ angular.module('myApp.services', [])
       .success(function(data) {
         var jsonData = data.query.results.ResultSet.Result;
 
-        if(jsonData) {
+        if (jsonData) {
           for (var i = 0; i < jsonData.length; i++) {
-            if((jsonData[i].exch == 'NMS') || (jsonData[i].exch == 'NYQ')) {
+            if ((jsonData[i].exch == 'NMS') || (jsonData[i].exch == 'NYQ')) {
               cleanResults.push(jsonData[i]);
             }
           }

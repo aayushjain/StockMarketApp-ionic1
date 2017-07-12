@@ -1,4 +1,5 @@
 
+
 /* My Stocks */
 
 #my-stocks .item-content {
@@ -38,6 +39,8 @@
   -webkit-box-shadow: inset 0px 0px 15px rgba(0, 0, 0, 0.15);
 }
 
+
+
 /* Search */
 
 #search {
@@ -51,6 +54,7 @@
 #search input {
   color: #fff;
 }
+
 
 
 /* News card */
@@ -79,7 +83,7 @@
 
 
 
- /* Notes Card */
+/* Notes Card */
 
 #stock-notes .add-stock-note {
   border: 1px solid #ff9800;
@@ -99,9 +103,7 @@
 #stock-note-body {
   min-height: 100px;
   padding: 10px 5px 5px;
-
 }
-
 
 
 
@@ -123,6 +125,7 @@
   font-size: 3vmin;
   float: right;
 }
+
 
 
 /* Stock navbar */
@@ -235,6 +238,8 @@
 .background-green {
   background-color: #33cd5f !important;
 }
+
+
 
 /* Chart Styles */
 
