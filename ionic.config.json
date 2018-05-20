@@ -17,5 +17,8 @@
   },
   "watchPatterns": [
     "scss/**/*"
-  ]
+  ],
+  "integrations": {
+    "cordova": {}
+  }
 }

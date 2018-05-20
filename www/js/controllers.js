@@ -27,7 +27,7 @@ angular.module('myApp.controllers', [])
           $scope.myStocksData = [];
 
           promise.then(function(data) {
-            $scope.myStocksData.push(stockPriceCacheService.get(data.t));
+            $scope.myStocksData.push(stockPriceCacheService.get(data.Symbol));
           });
         });
 
@@ -178,12 +178,12 @@ angular.module('myApp.controllers', [])
         promise.then(function(data) {
           $scope.stockPriceData = data;
 
-          if (data.c >= 0 && data !== null) {
+          if (data.Change >= 0 && data !== null) {
             $scope.reactiveColor = {
               'background-color': '#33cd5f',
               'border-color': 'rgba(255,255,255,.3)'
             };
-          } else if (data.c < 0 && data !== null) {
+          } else if (data.Change < 0 && data !== null) {
             $scope.reactiveColor = {
               'background-color': '#ef473a',
               'border-color': 'rgba(0,0,0,.2)'

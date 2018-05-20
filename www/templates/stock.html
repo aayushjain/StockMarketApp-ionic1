@@ -16,11 +16,11 @@
       </div>
     </div>
 
-    <h2 class="title button-left button-right" id="stock-price">{{stockPriceData.l}}</h2>
+    <h2 class="title button-left button-right" id="stock-price">{{stockPriceData.LastTradePriceOnly}}</h2>
 
     <div class="buttons" side="right">
       <div class="button button-clear">
-        <h6 id="stock-change" ng-class="stockPriceData.cp < 0 ? 'assertive' : 'balanced'">{{stockPriceData.c}}<br>(<span ng-if="stockPriceData.c > 0">+</span>{{stockPriceData.cp}}%)</h6>
+        <h6 id="stock-change" ng-class="stockPriceData.Change < 0 ? 'assertive' : 'balanced'">{{stockPriceData.Change | shrinkNumber:1}}<br>({{stockPriceData.PercentChange}})</h6>
       </div>
     </div>
 
@@ -44,7 +44,7 @@
 
 
     <div class="card" id="market-data-card">
-      <div class="item item-divider">Market Data <span class="last-trade">Last trade: {{stockPriceData.lt_dts | date:'h:mm a'}}</span></div>
+      <div class="item item-divider">Market Data <span class="last-trade">Last trade: {{stockPriceData.LastTradeTime}}</span></div>
       <div class="row row-center">
         <div class="col">Ask:</div>
         <div class="col col-20">{{stockDetailsData.Ask}}</div>

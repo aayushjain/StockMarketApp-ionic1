@@ -261,7 +261,7 @@ angular.module('myApp.services', [])
     cacheKey = ticker,
     stockDetailsCache = stockDetailsCacheService.get(cacheKey),
 
-    query = 'select * from yahoo.finance.quotes where symbol in ("' + ticker + '")',
+    query = 'select * from yahoo.finance.quote where symbol in ("' + ticker + '")',
     url = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIService.encode(query) + '&format=json&env=store://datatables.org/alltableswithkeys';
 
 
@@ -289,17 +289,24 @@ angular.module('myApp.services', [])
     //https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22GE%22,%20%22AAPL%22)&format=json&env=store://datatables.org/alltableswithkeys
     //https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=MSFT&apikey=
     //https://www.quandl.com/api/v3/datasets/WIKI/FB.json?&start_date=2017-05-11&end_date=2017-06-20&api_key=
-
+    //https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quote%20where%20symbol%20in%20(%22NFLX%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=
     var deferred = $q.defer(),
 
     cacheKey = ticker;
-    url = 'https://finance.google.com/finance/info?client=ig&q=' + ticker;
-    //apiKey = keys.alphavantage_api_key,
-    //url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&apikey='+ apiKey + '&symbol=' + ticker;
+
+    query = 'select * from yahoo.finance.quotes where symbol in ("' + ticker + '")"',
+    url = 'https://query.yahooapis.com/v1/public/yql?q=' + encodeURIService.encode(query) + '&format=json&env=store://datatables.org/alltableswithkeys';
+
+    // url = 'https://finance.google.com/finance/info?client=ig&q=' + ticker;
+    // apiKey = keys.alphavantage_api_key,
+    // url = 'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&apikey='+ apiKey + '&symbol=' + ticker;
 
     $http.get(url)
     .success(function(json) {
-      var jsonData = JSON.parse(json.replace(/\//g, ''))[0];
+      var jsonData = json.query.results.quote;
+      // Data = JSON.parse(JSON.stringify(json).replace(/\. /g, "").replace(/\ /g, ""));
+      // jsonData = Data["RealtimeGlobalSecuritiesQuote"];
+      // console.log(jsonData);
       deferred.resolve(jsonData);
       stockPriceCacheService.put(cacheKey, jsonData);
     })

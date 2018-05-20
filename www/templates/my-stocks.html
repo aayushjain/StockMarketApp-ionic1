@@ -15,22 +15,22 @@
     ></ion-refresher>
 
     <ion-list>
-      <ion-item ng-repeat="stock in myStocksData | orderBy: '-cp' track by stock.t" ng-href="#/app/{{stock.t}}">
+      <ion-item ng-repeat="stock in myStocksData | orderBy: '-PercentChange' track by stock.Symbol" ng-href="#/app/{{stock.Symbol}}">
         <div class="row row-center">
           <div class="col stock-ticker-name ">
-            <h3>{{stock.t}}</h3>
+            <h3>{{stock.Symbol}}</h3>
           </div>
           <div class="col col-25 stock-price-time">
-            <h3>{{stock.l}}</h3>
-            <h6>{{stock.lt_dts | date:'h:mm a'}}</h6>
+            <h3>{{stock.LastTradePriceOnly}}</h3>
+            <h6>{{stock.LastTradeTime}}</h6>
           </div>
-          <div class="col col-33 stock-change" ng-class="stock.c >= 0 ? 'background-green' : 'background-red'">
-            <h3>{{stock.c}}</h3>
-            <h6>{{stock.cp}}%</h6>
+          <div class="col col-33 stock-change" ng-class="stock.Change >= 0 ? 'background-green' : 'background-red'">
+            <h3>{{stock.Change}}</h3>
+            <h6>{{stock.PercentChange}}</h6>
           </div>
         </div>
 
-        <ion-option-button class="button-light icon ion-minus-circled color-red inset-shadow" ng-click="unfollowStock(stock.t)"></ion-option-button>
+        <ion-option-button class="button-light icon ion-minus-circled color-red inset-shadow" ng-click="unfollowStock(stock.Symbol)"></ion-option-button>
 
       </ion-item>
     </ion-list>
